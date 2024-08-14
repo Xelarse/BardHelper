@@ -1,0 +1,12 @@
+{
+  "Author": "Xelarse",
+  "Name": "Bard Helper",
+  "Punchline": "A collection of tools to help improve your Bard play!",
+  "Description": "A collection of tools to help improve your Bard play. \nIncluding: \n- Proc Tracker\n- Song Duration Helper\n\n\nCommands:\n/bh - Opens Bard Helper settings\n",
+  "ApplicableVersion": "any",
+  "Tags": [
+    "bard",
+    "proc",
+    "song"
+  ]
+}
