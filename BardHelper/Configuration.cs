@@ -1,5 +1,4 @@
 ﻿using Dalamud.Configuration;
-using Dalamud.Plugin;
 using System;
 
 namespace BardHelper;
@@ -10,8 +9,10 @@ public class Configuration : IPluginConfiguration
     public int Version { get; set; } = 0;
 
     public bool ProcHelperEnabled { get; set; } = true;
+    public bool ProcHelperLockUI { get; set; } = false;
 
     public bool SongHelperEnabled { get; set; } = true;
+    public bool SongHelperLockUI { get; set; } = false;
 
     public void Save()
     {

@@ -1,55 +1,75 @@
 ﻿using System;
 using System.Numerics;
+using Dalamud.Interface.Internal;
+using Dalamud.Interface.Utility;
 using Dalamud.Interface.Windowing;
+using Dalamud.Plugin.Services;
 using ImGuiNET;
 
 namespace BardHelper.Windows;
 
-public class ConfigWindow : Window, IDisposable
-{
+public class ConfigWindow : Window, IDisposable {
+    private Plugin Plugin;
     private Configuration Configuration;
 
-    public ConfigWindow(Plugin plugin) : base("Bard Helper###Config")
-    {
-        Flags = ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoScrollbar |
-                ImGuiWindowFlags.NoScrollWithMouse;
+    public ConfigWindow(Plugin plugin)
+        : base("Bard Helper##Main", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse) {
+        SizeConstraints = new WindowSizeConstraints {
+            MinimumSize = new Vector2(375, 330),
+            MaximumSize = new Vector2(float.MaxValue, float.MaxValue)
+        };
 
-        Size = new Vector2(232, 90);
-        SizeCondition = ImGuiCond.Always;
-
+        Plugin = plugin;
         Configuration = plugin.Configuration;
     }
 
     public void Dispose() { }
 
-    public override void PreDraw()
-    {
-        // Flags must be added or removed before Draw() is being called, or they won't apply
-        // if (Configuration.IsConfigWindowMovable)
-        // {
-        //     Flags &= ~ImGuiWindowFlags.NoMove;
-        // }
-        // else
-        // {
-        //     Flags |= ImGuiWindowFlags.NoMove;
-        // }
-    }
-
-    public override void Draw()
-    {
-        // can't ref a property, so use a local copy.
-        var procActive = Configuration.ProcHelperEnabled;
-        if (ImGui.Checkbox("Proc Helper Enabled", ref procActive))
-        {
-            Configuration.ProcHelperEnabled = procActive;
-            Configuration.Save();
+    public override void Draw() {
+        if (ImGui.CollapsingHeader("Proc Tracker Settings")) {
+            CheckBoxSetting("Enabled##ProcTracker", Configuration.ProcHelperEnabled,
+                            value => Configuration.ProcHelperEnabled = value);
+            CheckBoxSetting("LockUI##ProcTracker", Configuration.ProcHelperLockUI,
+                            value => Configuration.ProcHelperLockUI = value);
         }
 
-        var songActive = Configuration.SongHelperEnabled;
-        if (ImGui.Checkbox("Song Helper Enabled", ref songActive))
-        {
-            Configuration.SongHelperEnabled = songActive;
+        if (ImGui.CollapsingHeader("Song Helper Settings")) {
+            CheckBoxSetting("Enabled##SongHelper", Configuration.SongHelperEnabled,
+                            value => Configuration.SongHelperEnabled = value);
+            CheckBoxSetting("LockUI##SongTracker", Configuration.SongHelperLockUI,
+                            value => Configuration.SongHelperLockUI = value);
+        }
+    }
+
+    private void CheckBoxSetting(string settingName, bool currentSetting, Action<bool> updateSetting) {
+        var enabled = currentSetting;
+        if (ImGui.Checkbox($"{settingName}", ref enabled)) {
+            updateSetting(enabled);
             Configuration.Save();
         }
     }
 }
+
+
+// Reference code
+
+// if (ImGui.Button("Show Settings"))
+// {
+//     Plugin.ToggleConfigUI();
+// }
+//
+// ImGui.Spacing();
+//
+// ImGui.Text("Have a goat:");
+// var goatImage = Plugin.TextureProvider.GetFromFile(GoatImagePath).GetWrapOrDefault();
+// if (goatImage != null)
+// {
+//     ImGuiHelpers.ScaledIndent(55f);
+//     ImGui.Image(goatImage.ImGuiHandle, new Vector2(goatImage.Width, goatImage.Height));
+//     ImGuiHelpers.ScaledIndent(-55f);
+// }
+// else
+// {
+//     ImGui.Text("Image not found.");
+// }
+
