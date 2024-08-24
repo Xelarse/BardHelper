@@ -15,14 +15,10 @@ public class ProcTrackerWindow : Window, IDisposable {
             MaximumSize = new Vector2(400, 400)
         };
 
-        Flags = ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoDocking |
+        Flags |= ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoDocking |
                 ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoInputs;
 
-        if (configuration.ProcHelperLockUI) {
-            LockUI();
-        } else {
-            UnlockUI();
-        }
+        OnConfigUpdate(configuration);
 
         IsOpen = true;
     }
@@ -33,6 +29,14 @@ public class ProcTrackerWindow : Window, IDisposable {
 
     public override void Draw() {
         ImGui.Text($"{DisplayedValue}");
+    }
+
+    public void OnConfigUpdate(Configuration configuration) {
+        if (configuration.ProcHelperLockUI) {
+            LockUI();
+        } else {
+            UnlockUI();
+        }
     }
 
     public void LockUI() {

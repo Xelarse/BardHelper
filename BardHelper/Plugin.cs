@@ -49,6 +49,7 @@ public sealed class Plugin : IDalamudPlugin {
         WindowSystem.AddWindow(ConfigWindow);
 
         ProcTracker = new ProcTracker(this, JobGauges);
+        Configuration.OnConfigurationUpdatedEvent += ProcTracker.OnConfigUpdate;
 
         CommandManager.AddHandler(CommandName, new CommandInfo(OnCommand) {
             HelpMessage = "Opens the Bard Helper configuration."

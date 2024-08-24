@@ -4,8 +4,11 @@ using System;
 namespace BardHelper;
 
 [Serializable]
-public class Configuration : IPluginConfiguration
-{
+public class Configuration : IPluginConfiguration {
+    public delegate void ConfigurationUpdated(Configuration configuration);
+
+    public event ConfigurationUpdated? OnConfigurationUpdatedEvent;
+
     public int Version { get; set; } = 0;
 
     public bool ProcHelperEnabled { get; set; } = true;
@@ -17,5 +20,6 @@ public class Configuration : IPluginConfiguration
     public void Save()
     {
         Plugin.PluginInterface.SavePluginConfig(this);
+        OnConfigurationUpdatedEvent?.Invoke(this);
     }
 }

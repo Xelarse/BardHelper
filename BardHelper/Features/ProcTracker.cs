@@ -11,7 +11,7 @@ namespace BardHelper.Features;
 public class ProcTracker : IDisposable {
     private const int ProcDelta = 3;
 
-    public bool IsDisabled { get; set; }
+    public bool IsEnabled { get; set; }
 
     private readonly Plugin Plugin;
     private ProcTrackerWindow Hud { get; init; }
@@ -27,9 +27,8 @@ public class ProcTracker : IDisposable {
     }
 
     public void Draw() {
-        // Plugin.Logger.Debug($"Flags: {Hud.Flags}");
-
         if (ShouldProcess()) {
+            Plugin.Logger.Debug($"Flags: {Hud.Flags}");
             Hud.Draw();
         }
     }
@@ -52,7 +51,12 @@ public class ProcTracker : IDisposable {
         Hud.DisplayedValue = ProcDelta - (timeInSeconds % ProcDelta);
     }
 
+    public void OnConfigUpdate(Configuration configuration) {
+        Hud.OnConfigUpdate(configuration);
+        IsEnabled = configuration.ProcHelperEnabled;
+    }
+
     private bool ShouldProcess() {
-        return !IsDisabled && Plugin.ClientState.LocalPlayer?.ClassJob.Id == 23;
+        return IsEnabled && Plugin.ClientState.LocalPlayer?.ClassJob.Id == 23;
     }
 }
