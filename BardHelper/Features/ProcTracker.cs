@@ -47,8 +47,9 @@ public class ProcTracker : IDisposable {
         }
 
         // Procs happen in 3s intervals. So it's a good use of modulo for this
-        var timeInSeconds = (int)(bardGauge.SongTimer * 10e-4 + 1); // +1 to account for round down
-        Hud.DisplayedValue = ProcDelta - (timeInSeconds % ProcDelta);
+        var timeInMili = (int)(bardGauge.SongTimer * 10e-3);
+        var roundedUpSeconds = (timeInMili + 9) / 10;   // Need to round up to the nearest second to match in game timer
+        Hud.DisplayedValue = ProcDelta - (roundedUpSeconds % ProcDelta);
     }
 
     public void OnConfigUpdate(Configuration configuration) {
