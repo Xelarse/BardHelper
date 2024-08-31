@@ -15,12 +15,13 @@ public class ProcTrackerWindow : Window, IDisposable {
             MaximumSize = new Vector2(400, 400)
         };
 
-        Flags |= ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoDocking |
-                ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoInputs;
+        Flags |= ImGuiWindowFlags.NoTitleBar |
+                 ImGuiWindowFlags.NoScrollbar |
+                 ImGuiWindowFlags.NoCollapse |
+                 ImGuiWindowFlags.NoBackground |
+                 ImGuiWindowFlags.NoDocking;
 
         OnConfigUpdate(configuration);
-
-        IsOpen = true;
     }
 
     public void Dispose() { }
@@ -28,6 +29,7 @@ public class ProcTrackerWindow : Window, IDisposable {
     public override void PreDraw() { }
 
     public override void Draw() {
+        Plugin.Logger.Debug($"ProcTrackerWindow Flags: {Flags}");
         ImGui.Text($"{DisplayedValue}");
     }
 
@@ -40,10 +42,10 @@ public class ProcTrackerWindow : Window, IDisposable {
     }
 
     public void LockUI() {
-        Flags |= ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize;
+        Flags |= ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoInputs;
     }
 
     public void UnlockUI() {
-        Flags &= ~(ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize);
+        Flags &= ~(ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoInputs);
     }
 }

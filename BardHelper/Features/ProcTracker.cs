@@ -28,7 +28,6 @@ public class ProcTracker : IDisposable {
 
     public void Draw() {
         if (ShouldProcess()) {
-            Plugin.Logger.Debug($"Flags: {Hud.Flags}");
             Hud.Draw();
         }
     }
