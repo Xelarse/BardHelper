@@ -31,6 +31,8 @@ public class ConfigWindow : Window, IDisposable {
                             value => Configuration.ProcHelperEnabled = value);
             CheckBoxSetting("LockUI##ProcTracker", Configuration.ProcHelperLockUI,
                             value => Configuration.ProcHelperLockUI = value);
+            CheckBoxSetting("Background##ProcTracker", Configuration.ProcHelperBackground,
+                            value => Configuration.ProcHelperBackground = value);
         }
 
         if (ImGui.CollapsingHeader("Song Helper Settings")) {

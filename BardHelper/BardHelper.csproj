@@ -24,4 +24,11 @@
             <Visible>false</Visible>
         </Content>
     </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="..\Data\Freedom.ttf">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <Visible>false</Visible>
+        </Content>
+    </ItemGroup>
 </Project>

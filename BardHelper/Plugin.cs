@@ -6,6 +6,8 @@ using Dalamud.Interface.Windowing;
 using Dalamud.Plugin.Services;
 using BardHelper.Windows;
 using BardHelper.Features;
+using ImGuiNET;
+using System.IO;
 
 namespace BardHelper;
 
@@ -41,12 +43,18 @@ public sealed class Plugin : IDalamudPlugin {
     private ConfigWindow ConfigWindow { get; init; }
 
     // Plugin features
+    public ImFontPtr NumberFont { get; init; }
+
     private ProcTracker ProcTracker { get; init; }
 
     public Plugin() {
         Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
         ConfigWindow = new ConfigWindow(this);
         WindowSystem.AddWindow(ConfigWindow);
+
+        var numberFontPath = Path.Combine(PluginInterface.AssemblyLocation.Directory?.FullName!, "Freedom.ttf");
+        ImGuiIOPtr io = ImGui.GetIO();
+        // NumberFont = io.Fonts.AddFontFromFileTTF(numberFontPath, 500.0f);
 
         ProcTracker = new ProcTracker(this, JobGauges);
         Configuration.OnConfigurationUpdatedEvent += ProcTracker.OnConfigUpdate;
@@ -87,6 +95,3 @@ public sealed class Plugin : IDalamudPlugin {
 
     public void ToggleConfigUI() => ConfigWindow.Toggle();
 }
-
-// // you might normally want to embed resources and load them from the manifest stream
-// var goatImagePath = Path.Combine(PluginInterface.AssemblyLocation.Directory?.FullName!, "goat.png");

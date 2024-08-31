@@ -3,7 +3,6 @@ using Dalamud.Plugin.Services;
 using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using BardHelper.Windows;
-using Lumina.Excel.GeneratedSheets;
 
 
 namespace BardHelper.Features;
@@ -19,7 +18,7 @@ public class ProcTracker : IDisposable {
     public ProcTracker(Plugin plugin, IJobGauges jobGauges) {
         Plugin = plugin;
         Hud = new ProcTrackerWindow(Plugin.Configuration);
-        Plugin.WindowSystem.AddWindow(Hud);
+        Hud.ShouldRender = ShouldProcess();
     }
 
     public void Dispose() {
@@ -27,19 +26,20 @@ public class ProcTracker : IDisposable {
     }
 
     public void Draw() {
-        if (ShouldProcess()) {
-            Hud.Draw();
-        }
+        Hud.Draw();
     }
 
     public void Tick(IFramework framework) {
         if (!ShouldProcess()) {
+            Hud.ShouldRender = false;
             return;
         }
 
+        // If we should be processing then ensure the UI is enabled.
+        Hud.ShouldRender = true;
+
         // Set the proc tracker UI active and set the value displayed to be relative to the currently playing song.
         var bardGauge = Plugin.JobGauges.Get<BRDGauge>();
-        Hud.IsOpen = true;
         if (bardGauge.Song == Song.NONE) {
             Hud.DisplayedValue = 0;
             return;

@@ -13,6 +13,7 @@ public class Configuration : IPluginConfiguration {
 
     public bool ProcHelperEnabled { get; set; } = true;
     public bool ProcHelperLockUI { get; set; } = false;
+    public bool ProcHelperBackground { get; set; } = true;
 
     public bool SongHelperEnabled { get; set; } = true;
     public bool SongHelperLockUI { get; set; } = false;
