@@ -8,6 +8,7 @@ using BardHelper.Windows;
 using BardHelper.Features;
 using ImGuiNET;
 using System.IO;
+using BardHelper.Utilities;
 
 namespace BardHelper;
 
@@ -43,8 +44,7 @@ public sealed class Plugin : IDalamudPlugin {
     private ConfigWindow ConfigWindow { get; init; }
 
     // Plugin features
-    public ImFontPtr NumberFont { get; init; }
-
+    public Fonts FontUtilities { get; init; }
     private ProcTracker ProcTracker { get; init; }
 
     public Plugin() {
@@ -52,9 +52,7 @@ public sealed class Plugin : IDalamudPlugin {
         ConfigWindow = new ConfigWindow(this);
         WindowSystem.AddWindow(ConfigWindow);
 
-        var numberFontPath = Path.Combine(PluginInterface.AssemblyLocation.Directory?.FullName!, "Freedom.ttf");
-        ImGuiIOPtr io = ImGui.GetIO();
-        // NumberFont = io.Fonts.AddFontFromFileTTF(numberFontPath, 500.0f);
+        FontUtilities = new Fonts(this, PluginInterface);
 
         ProcTracker = new ProcTracker(this, JobGauges);
         Configuration.OnConfigurationUpdatedEvent += ProcTracker.OnConfigUpdate;
@@ -77,6 +75,7 @@ public sealed class Plugin : IDalamudPlugin {
         FrameworkManager.Update -= OnFrameworkUpdate;
 
         ProcTracker.Dispose();
+        FontUtilities.Dispose();
     }
 
     private void OnFrameworkUpdate(IFramework framework) {

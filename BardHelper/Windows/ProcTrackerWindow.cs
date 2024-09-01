@@ -1,5 +1,6 @@
 using System;
 using System.Numerics;
+using Dalamud.Interface.Utility;
 using Dalamud.Interface.Windowing;
 using ImGuiNET;
 
@@ -7,10 +8,12 @@ namespace BardHelper.Windows;
 
 public class ProcTrackerWindow : Window, IDisposable {
 
-    public int DisplayedValue { get; set; }
-    public bool ShouldRender { get; set; }
+    internal int DisplayedValue { get; set; }
+    internal bool ShouldRender { get; set; }
 
-    public ProcTrackerWindow(Configuration configuration) : base("Bard Helper##ProcTrackerWindow") {
+    private ImFontPtr? TextFont { get; init; }
+
+    public ProcTrackerWindow(Configuration configuration, ImFontPtr? font) : base("Bard Helper##ProcTrackerWindow") {
         SizeConstraints = new WindowSizeConstraints {
             MinimumSize = new Vector2(50, 50),
             MaximumSize = new Vector2(400, 400)
@@ -21,6 +24,8 @@ public class ProcTrackerWindow : Window, IDisposable {
             ImGuiWindowFlags.NoScrollbar |
             ImGuiWindowFlags.NoCollapse |
             ImGuiWindowFlags.NoDocking;
+
+        TextFont = font;
 
         OnConfigUpdate(configuration);
     }
@@ -33,10 +38,14 @@ public class ProcTrackerWindow : Window, IDisposable {
             return;
         }
 
-
         ImGui.Begin("Bard Helper##ProcTrackerWindowUI", Flags);
-        Plugin.Logger.Debug($"Font Scale: {ImGui.GetFontSize()}");
-        ImGui.Text($"{DisplayedValue}");
+        if (TextFont.HasValue && TextFont.Value.IsNotNullAndLoaded()) {
+            ImGui.PushFont(TextFont.Value);
+            ImGui.Text($"{DisplayedValue}");
+            ImGui.PopFont();
+        } else {
+            ImGui.Text("Failed to load font.");
+        }
         ImGui.End();
     }
 

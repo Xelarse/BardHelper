@@ -17,7 +17,7 @@ public class ProcTracker : IDisposable {
 
     public ProcTracker(Plugin plugin, IJobGauges jobGauges) {
         Plugin = plugin;
-        Hud = new ProcTrackerWindow(Plugin.Configuration);
+        Hud = new ProcTrackerWindow(Plugin.Configuration, plugin.FontUtilities.LoadFont("Freedom.ttf", 100.0f));
         Hud.ShouldRender = ShouldProcess();
     }
 
